@@ -27,6 +27,14 @@ function get_exposure_setting {
   fi
 }
 
+function get_exposure {
+  if [[ $(get_exposure_setting) == "Auto" ]]; then
+    echo "$TIMESTAMP  Cannot get exposure, Exposure is Auto." >> $TL/exposure.log
+  elif [[ $(get_exposure_setting) == "Manual" ]]; then
+    exposure = v4l2-ctl -d $CAMERA -C exposure_absolute
+    # PARSE EXPOSURE for the settings
+}
+
 function set_exposure {
   echo "$TIMESTAMP  Setting exposure to $1" >> $TL/exposure_dryrun
   if [[ $(get_exposure_setting) == "Auto" ]]; then 

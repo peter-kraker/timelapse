@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Script that schedules photos to be taken between before sunrise (twirise)
+# and twilight (after sunset). 
+
 TL=/usr/local/google/home/pkraker/timelapse
 
 # Dates are expressed as seconds from epoch
@@ -32,8 +35,6 @@ function oneminlater {
 
 TWIRISE=$(before $SUNRISE 6000) # 100 mintues before sunrise
 TWILIGHT=$(after $SUNSET 10800) # 3 hours after sunset
-START_LOWERING=$(before $SUNRISE 1200) # 20 minutes before sunrise
-START_RAISING=$(after $SUNSET 1200) # 20 minutes after sunset
 
 if [ $NOW -gt $TWIRISE ] && [ $NOW -lt $TWILIGHT ];
   then

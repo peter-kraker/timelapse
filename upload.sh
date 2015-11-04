@@ -1,4 +1,11 @@
 #!/bin/bash
+
+# Script to upload a movie cerated by makeagif.sh to YouTube.
+# requires the upload_video.py script created by Google; can be found:
+#
+# https://developers.google.com/youtube/v3/guides/uploading_a_video
+# 
+
 TL=/usr/local/google/home/pkraker/timelapse
 MONTH=`date +%m`
 DAY=`date +%d`

@@ -42,4 +42,6 @@ fi
 
 mencoder mf://$DIR/$MONTH/$DAY/*.jpg -mf fps=$FRAMERATE:type=jpg -ovc x264 -x264encopts bitrate=1200:threads=4 -o $DIR/$MONTH/$DAY-animated.mkv
 
+# Trying different encoding options for video format / quality.
+
 #mencoder mf://$DIR/$MONTH/$DAY/*.jpg -mf fps=$FRAMERATE:type=jpg -ovc lavc -of lavf -lavfopts format=webm -lavcopts threads=4:vcodec=libvpx -o $DIR/$MONTH/$DAY-animated.webm
