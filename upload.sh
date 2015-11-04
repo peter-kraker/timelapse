@@ -6,7 +6,6 @@
 # https://developers.google.com/youtube/v3/guides/uploading_a_video
 # 
 
-TL=/usr/local/google/home/pkraker/timelapse
 MONTH=`date +%m`
 DAY=`date +%d`
 

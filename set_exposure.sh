@@ -2,7 +2,6 @@
 
 CAMERA=/dev/video0
 TIMESTAMP=$(date +%D-%H%M%S)
-TL=/usr/local/google/home/pkraker/timelapse
 
 while [[ $# >0 ]]
 do

@@ -3,8 +3,6 @@
 # Script that schedules photos to be taken between before sunrise (twirise)
 # and twilight (after sunset). 
 
-TL=/usr/local/google/home/pkraker/timelapse
-
 # Dates are expressed as seconds from epoch
 SUNRISE=$(date -d $(cat $TL/sunrise) +%s)
 SUNSET=$(date -d $(cat $TL/sunset) +%s)

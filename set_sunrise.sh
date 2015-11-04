@@ -1,6 +1,5 @@
 #!/bin/bash
 
-TL=/usr/local/google/home/pkraker/timelapse
 API=`cat wunderground_api_key`
 JSON=`curl "http://api.wunderground.com/api/$API/astronomy/q/Japan/Tokyo.json"`
 

@@ -5,7 +5,7 @@
 TIME=`date +"%H%M%S"`
 MONTH=`date +%m`
 DAY=`date +%d`
-TL=/usr/local/google/home/pkraker/timelapse
+#TL=/usr/local/google/home/pkraker/timelapse
 
 # Point CAMERA to which device you want to use
 CAMERA=/dev/video0 
