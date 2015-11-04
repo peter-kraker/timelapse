@@ -33,4 +33,6 @@ esac
 shift
 done
 
-python upload_video.py --file $TL/pics/$MONTH/$DAY-animated.mkv --title "Tokyo Timelapse $MONTH $DAY" --privacyStatus "unlisted"
+python upload_video.py --file $TL/pics/$MONTH/$DAY-animated.mkv \
+                       --title "Tokyo Timelapse $MONTH $DAY" \
+                       --privacyStatus "unlisted"
