@@ -2,34 +2,43 @@
 
 TL=/usr/local/google/home/pkraker/timelapse
 
-#Dates are expressed as seconds from epoch
+# Dates are expressed as seconds from epoch
 SUNRISE=$(date -d $(cat $TL/sunrise) +%s)
 SUNSET=$(date -d $(cat $TL/sunset) +%s)
 NOW=$(date +%s)
 
-function tenminbefore {
-  echo $(($1 - 600))
+
+# $1: The time you want to modify (e.g. now)
+# $2: The amount of time you want change $1 by
+# Ten minutes (600 seconds) from now would be:
+#
+#     before `date +%s` 600  
+#
+
+function before {
+  echo $(($1 - $2))
 }
 
-function tenminafter {
-  echo $(($1 + 6000))
+function after {
+  echo $(($1 + $2))
 }
 
-#Returns one minute from now in Hour:Minute format (e.g. 18:50)
+
+# Returns one minute from now in Hour:Minute format (e.g. 18:50)
+
 function oneminlater {
   date -d "@$(($(date +%s) + 60))" +%H:%M
 }
 
-TWIRISE=$(tenminbefore $SUNRISE)
-TWILIGHT=$(tenminafter $SUNSET)
+TWIRISE=$(before $SUNRISE 6000) # 100 mintues before sunrise
+TWILIGHT=$(after $SUNSET 10800) # 3 hours after sunset
+START_LOWERING=$(before $SUNRISE 1200) # 20 minutes before sunrise
+START_RAISING=$(after $SUNSET 1200) # 20 minutes after sunset
 
 if [ $NOW -gt $TWIRISE ] && [ $NOW -lt $TWILIGHT ];
   then
-    at -f $TL/takeapic.sh `oneminlater` >> $TL/tl_info.log 2>&1
+    at -f $TL/takesomepics.sh `oneminlater` >> $TL/tl_info.log 2>&1
   else
-    echo "I will start taking pictures in $(date -d @$(($TWIRISE - $NOW)) +%H:%M)"
-#    echo "The time is $(date +%d_%H:%M)" >>  $TL/tl_info.log
-#    echo "Sunrise is scheduled for $(date -d @$SUNRISE +%d_%H:%M)" >>  $TL/tl_info.log
-#    echo "Sunset is scheduled for $(date -d @$SUNSET +%d_%H:%M)" >>  $TL/tl_info.log
-#    echo >>  $TL/tl_info.log
+    #TODO: $TWIRISE needs to be updated for tomorrow
+    echo "I will start taking pictures in $(date -d @$(($TWIRISE - $NOW)) +%H:%M)" 
 fi
