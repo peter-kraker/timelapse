@@ -9,7 +9,6 @@ SUNRISE=$(date -d $(cat $TL/sunrise) +%s)
 SUNSET=$(date -d $(cat $TL/sunset) +%s)
 NOW=$(date +%s)
 
-
 # Before and after functions:
 # 
 #   $1: The time you want to modify (e.g. now)
@@ -42,5 +41,5 @@ if [ $NOW -gt $TWIRISE ] && [ $NOW -lt $TWILIGHT ];
     at -f $TL/takesomepics.sh `oneminlater` >> $TL/tl_info.log 2>&1
   else
     #TODO: $TWIRISE needs to be updated for tomorrow
-    echo "I will start taking pictures in $(date -d @$(($TWIRISE - $NOW)) +%H:%M)" 
+    echo "I will take pictures in $(date -d @$(($TWIRISE - $NOW)) +%H:%M)" 
 fi
