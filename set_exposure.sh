@@ -1,5 +1,16 @@
 #!/bin/bash
 
+# Script to easily switch between manual and automatic exposure using v4l2-ctl
+# 
+# Logs activity to exposure.log 
+#
+# Usage:
+#  Automatic exposure: 
+#    set_exposure -a
+# 
+#  Manual exposure
+#    set_exposure -m
+
 CAMERA=/dev/video0
 TIMESTAMP=$(date +%D-%H%M%S)
 
