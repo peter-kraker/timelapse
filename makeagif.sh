@@ -50,10 +50,10 @@ mencoder mf://$TL/pics/$MONTH/$DAY/*.jpg -mf fps=$FRAMERATE:type=jpg \
 
 # Trying different encoding options for video format / quality.
 
-#mencoder mf://$TL/pics/$MONTH/$DAY/*.jpg \
-#  -mf fps=$FRAMERATE:type=jpg \
-#  -ovc lavc \
-#  -of lavf \
-#  -lavfopts format=webm \
-#  -lavcopts threads=4:vcodec=libvpx \
-#  -o $TL/pics/$MONTH/$DAY-animated.webm
+mencoder mf://$TL/pics/$MONTH/$DAY/*.jpg \
+  -mf fps=$FRAMERATE:type=jpg \
+  -ovc lavc \
+  -of lavf \
+  -lavfopts format=webm \
+  -lavcopts threads=4:vcodec=libvpx \
+  -o $TL/pics/$MONTH/$DAY-animated.webm
