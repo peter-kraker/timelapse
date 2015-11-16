@@ -8,6 +8,7 @@
 
 MONTH=`date +%m`
 DAY=`date +%d`
+FORMAT="mkv"
 
 while [[ $# >1 ]]
 do
@@ -22,8 +23,8 @@ case $key in
   DAY=$2
   shift
   ;;
-  -f|--framerate)
-  FRAMERATE=$2
+  -f|--format)
+  FORMAT=$2
   ;;
   *)
 
@@ -32,6 +33,8 @@ esac
 shift
 done
 
-python upload_video.py --file $TL/pics/$MONTH/$DAY-animated.mkv \
+echo "$TL/pics/$MONTH/$DAY-animated.$FORMAT"
+
+python upload_video.py --file $TL/pics/$MONTH/$DAY-animated.$FORMAT \
                        --title "Tokyo Timelapse $MONTH $DAY" \
-                       --privacyStatus "unlisted"
+                       --privacyStatus "unlisted" >> $TL/tl_info.log

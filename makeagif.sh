@@ -1,5 +1,16 @@
 # makeagif.sh -- takes a folder of jpegs and turns it into a mkv
-# requires mencoder
+# requires mencode
+#
+# Usage:
+#
+#   -m - Two-digit Month (i.e. Jan = 01)
+#     Default : the current month
+#
+#   -d - Two-digit Day (i.e. 3rd = 03)
+#     Default : the current day
+#
+#   -f - Framerate of the resulting video
+#     Default : 60
 
 #!/bin/bash
 
