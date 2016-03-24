@@ -17,6 +17,7 @@ case $key in
     MONTH=$2
   fi
   shift
+  ;;
   -f|--format)
   FORMAT=$2
   shift
@@ -36,5 +37,10 @@ shift
 done
 
 for i in `seq $START $END`; do
-  ./upload.sh -m $MONTH -d $i -f $FORMAT 
+  if [[ "$i" == [1-9] ]]; then
+    DAY=0$i
+  else
+    DAY=$i
+  fi
+  ./upload.sh -m $MONTH -d $DAY -f $FORMAT 
 done
