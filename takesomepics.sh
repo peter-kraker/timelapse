@@ -22,15 +22,13 @@ fi
 # Auto-exposure on webcams really sucks. Dump 60 frames of video to force the 
 #   camera to do it's job. 
 # 
-# Doing this every 5 minutes to try and reduce flicker from changing the 
+# Doing this before every fram to reduce flicker from changing the 
 #   exposure every other frame
 #
 # There has got to be a better way of ensuring auto-exposure does it's job
 
-if [ `date +%M` % 5 == 0 ]; then
-  fswebcam -F 60 -d $CAMERA
-  sleep 5
-fi
+fswebcam -F 60 -d $CAMERA
+sleep 5
 
 # In order to get a better framerate on the final video, take a photo every 30
 #   seconds.
@@ -42,5 +40,11 @@ fswebcam -q -r 1920x1080 --no-banner -d $CAMERA \
 
 sleep 30
 
+fswebcam -F 60 -d $CAMERA
+sleep 5
+
+# Reset $TIME for the second photo
+TIME=`date +"%H%M%S"`
+
 fswebcam -q -r 1920x1080 --no-banner -d $CAMERA \
-  $TL/pics/$MONTH/$DAY/`date +"%H%M%S"`.jpg >> $TL/tl_info.log 2>&1
+  $TL/pics/$MONTH/$DAY/$TIME.jpg >> $TL/tl_info.log 2>&1

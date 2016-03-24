@@ -8,7 +8,7 @@
 
 MONTH=`date +%m`
 DAY=`date +%d`
-FORMAT="mkv"
+FORMAT="webm"
 
 while [[ $# >1 ]]
 do
@@ -35,6 +35,6 @@ done
 
 echo "$TL/pics/$MONTH/$DAY-animated.$FORMAT"
 
-python upload_video.py --file $TL/pics/$MONTH/$DAY-animated.$FORMAT \
+python $TL/upload_video.py --file $TL/pics/$MONTH/$DAY-animated.$FORMAT \
                        --title "Tokyo Timelapse $MONTH $DAY" \
                        --privacyStatus "unlisted" >> $TL/tl_info.log

@@ -5,7 +5,7 @@ API=`cat $TL/wunderground_api_key`
 # Modify the URL for your own locality
 JSON=`curl "http://api.wunderground.com/api/$API/astronomy/q/Japan/Tokyo.json"`
 
-echo $JSON > $TL/tl_info.log 2>&1 $TL/wunderground.json
+echo $JSON >> $TL/tl_info.log 2>&1 $TL/wunderground.json
 
 function get_sunrise {
 	HOUR=`echo $JSON | jq ".sun_phase.sunrise.hour" | sed -e "s/\"//g"`
