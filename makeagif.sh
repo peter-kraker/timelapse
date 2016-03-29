@@ -14,6 +14,7 @@
 #
 #   -o - Output format of the resulting video
 #     Default : mkv
+
 #!/bin/bash
 
 MONTH=`date +%m`
@@ -57,12 +58,14 @@ echo "mencoder
         -fm fps=$FRAMERATE:type=jpg 
         -ovc x264 
         -x264encopts bitrate=1200:threads=3 
-        -o $TL/pics/$MONTH/$DAY-animated.webm"
+        -o $TL/pics/$MONTH/$DAY-animated.$OUTPUT"
 
 if [[ -n $1 ]]; then
   echo "Last line of file specified as non-opt/last argument:"
   tail -1 $1
 fi 
+
+# Currently using three threads for encoding.
 
 case $OUTPUT in 
   "mkv")

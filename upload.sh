@@ -9,6 +9,7 @@
 MONTH=`date +%m`
 DAY=`date +%d`
 FORMAT="webm"
+DRYRUN=0
 
 while [[ $# >1 ]]
 do
@@ -26,6 +27,9 @@ case $key in
   -f|--format)
   FORMAT=$2
   ;;
+  --dryrun)
+  DRYRUN=$2
+  ;;
   *)
 
   ;;
@@ -34,6 +38,10 @@ shift
 done
 
 echo "$TL/pics/$MONTH/$DAY-animated.$FORMAT"
+
+if [[ $DRYRUN -eq 1 ]] ; then 
+  python $TL/upload_video.py --file 
+fi
 
 python $TL/upload_video.py --file $TL/pics/$MONTH/$DAY-animated.$FORMAT \
                        --title "Tokyo Timelapse $MONTH $DAY" \
