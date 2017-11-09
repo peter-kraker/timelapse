@@ -39,11 +39,24 @@ exports.makeVideo = function makeVideo(req, res) {
 };
 
 function checkImages (body) {
+// Make sure there are days defined in the request
+  if(!body || body.day === undefined || body.month === undefined) {
+    const error = new Error('Need to specify a date!');
+	error.code = 400
+	throw error;
+  };
+	  
   const storage = new Storage();
-  bucketName = 'timelapse-scratch/' + body.month + '/' + body.day;
-  storage.bucket(bucketName).getfiles().then(results => {
+  const bucketName = 'timelapse-scratch/' + body.month + '/' + body.day;
+
+// Get all the files in the bucket	  
+  storage
+	  .bucket(bucketName)
+	  .getfiles()
+	  .then(results => {
     const files = results[0];
     
+// Put the list of files in the logs.
     console.log('Files:');
     files.forEach(file => {
       console.log(file.name);
@@ -51,16 +64,16 @@ function checkImages (body) {
   }).catch(err => {
     console.error('ERROR:', err);
   });
-    
-  if(!body || body.day === undefined || body.month === undefined) {
-    const error = new Error('Need to specify a date!');
-	error.code = 400
-	throw error;
-  } else if (files.length == 0) {
+	  
+// If you couldn't find any files, throw an error. 
+  if (files.length == 0) {
     const error = new Error('No files found in bucket: ' + bucketName + '!');
 	error.code = 400
 	throw error;
   }
+
+// Now, Make the video.
+	  
 };
              
 
