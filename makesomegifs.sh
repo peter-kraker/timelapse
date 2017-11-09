@@ -69,4 +69,4 @@ done
 
 # Run two at a time
 
-makesomegifs | xargs --max-procs=2 -n 1 -I CMD bash -c CMD
+makesomegifs | xargs --max-procs=1 -n 1 -I CMD bash -c CMD

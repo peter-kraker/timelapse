@@ -4,6 +4,11 @@
 #   and twilight (after sunset). 
 #
 
+if [[ -z `cat $TL/sunrise` || -z `cat $TL/sunset` ]]; then
+  echo "SUNRISE / SUNSET isn't set -- Won't take pictures" >> $TL/tl_info.log
+  exit -1 
+fi
+
 # All dates are expressed as seconds from epoch
 SUNRISE=$(date -d $(cat $TL/sunrise) +%s)
 SUNSET=$(date -d $(cat $TL/sunset) +%s)
@@ -34,12 +39,12 @@ function oneminlater {
 }
 
 TWIRISE=$(before $SUNRISE 6000) # 100 mintues before sunrise
-TWILIGHT=$(after $SUNSET 10800) # 3 hours after sunset
+TWILIGHT=$(after $SUNSET 5400) # 90 minutes after sunset
 
 if [ $NOW -gt $TWIRISE ] && [ $NOW -lt $TWILIGHT ];
   then
-    at -f $TL/takesomepics.sh `oneminlater` >> $TL/tl_info.log 2>&1
+    echo "taking pics @ `oneminlater`" >> $TL/tl_info.log
+    at -f $TL/takesomepics.sh `oneminlater` 2>> $TL/tl_info.log
   else
-    #TODO: $TWIRISE needs to be updated for tomorrow
-    echo "I will take pictures in $(date -d @$(($TWIRISE - $NOW)) +%H:%M)" 
+    echo "I will take pictures at $(date -d @$(($TWIRISE)) +%H:%M)" 
 fi

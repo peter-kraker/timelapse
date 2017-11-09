@@ -8,7 +8,8 @@
 
 MONTH=`date +%m`
 DAY=`date +%d`
-FORMAT="webm"
+YEAR=`date +%Y`
+FORMAT="mkv"
 DRYRUN=0
 
 while [[ $# >1 ]]
@@ -37,12 +38,13 @@ esac
 shift
 done
 
-echo "$TL/pics/$MONTH/$DAY-animated.$FORMAT"
+echo "RUNNING upload.sh -m $MONTH -d $DAY" >> $TL/tl_info.log
+echo "$TL/pics/$MONTH/$DAY-animated.$FORMAT" >> $TL/tl_info.log
 
 if [[ $DRYRUN -eq 1 ]] ; then 
   python $TL/upload_video.py --file 
 fi
 
 python $TL/upload_video.py --file $TL/pics/$MONTH/$DAY-animated.$FORMAT \
-                       --title "Tokyo Timelapse $MONTH $DAY" \
-                       --privacyStatus "unlisted" >> $TL/tl_info.log
+                       --title "Olympic Timelapse $MONTH $DAY, $YEAR" \
+                       --privacyStatus "public"
