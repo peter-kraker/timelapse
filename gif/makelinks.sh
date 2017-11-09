@@ -47,7 +47,7 @@ for i in $TL/pics/$MONTH/$DAY/*.jpg; do
 # * 55000 - Cuts out
 # * 65000 - Lose an average of ~15 frames.
 
-  if [ $MEAN -lt 65000 ]
+  if [ $MEAN -lt 1000000 ];
     then
       new=$(printf "%04d.JPG" ${a}) #04 pad to length of 4
       ln -s ${i} $TL/gif/${new}
