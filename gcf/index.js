@@ -62,7 +62,11 @@ function checkImages (body) {
       console.log(file.name);
     });
   }).catch(err => {
+    const error = new Error('Could not access storage');
+    error.code = 401
     console.error('ERROR:', err);
+    throw error;
+    
   });
 	  
 // If you couldn't find any files, throw an error. 
