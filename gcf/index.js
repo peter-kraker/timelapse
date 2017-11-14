@@ -27,7 +27,7 @@ exports.makeVideo = function makeVideo(req, res) {
     
     checkAndGetImages(req.body);
     return createVideo(req.body.month, req.body.day);
-    
+
   }).then((response) => {
     res.status(200).send('Success: ' + req.body.month + ' ' + req.body.day + ' - VideoID:' + res.json(response));
   }).catch((err) => {
@@ -49,7 +49,6 @@ function checkAndGetImages (body) {
   const prefix = body.month + '/' + body.day + '/';
   const delimiter = '/';
   const tempImageDir = '/tmp/images';
-  console.log('Created ' + tempImageDir);
   console.log("Bucket Name: " + bucketName);
   console.log("Folder name: " + prefix);
 
@@ -60,6 +59,13 @@ function checkAndGetImages (body) {
   if (delimiter) {
     options.delimiter = delimiter;
   }
+
+  // Make the tempDirectory
+  try {
+  fs.mkdirSync(tempImageDir);
+} catch(err) {
+  if (err.code !== 'EEXIST') throw err
+}
 
   const storage = new Storage();
 
