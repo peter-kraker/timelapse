@@ -103,6 +103,8 @@ function createVideo (month, day) {
     console.log('AVconv parameters: ' + params);
     var stream = avconv(params);
     stream.on('error', function(data) {
+      console.error(data);
+      console.error(params);
       const error = new Error('AVconv had an issue: ' + data);
       error.code = 501;
       throw error;
