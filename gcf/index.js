@@ -62,6 +62,8 @@ function checkImages (body) {
 
   const storage = new Storage();
 
+  console.debug(storage.bucket(bucketName));
+
 // check to make sure the bucket exists
   storage.getBuckets()
 	.then(results => {
