@@ -42,7 +42,7 @@ function checkImages (body) {
 // Make sure there are days defined in the request
   if(!body || body.day === undefined || body.month === undefined) {
     const error = new Error('Need to specify a date!');
-	error.code = 400
+	error.code = 400;
 	throw error;
   };
 	  
@@ -77,7 +77,7 @@ function checkImages (body) {
     });
     if (files.length == 0) {
       const error = new Error('No files found in bucket: ' + bucketName + '!');
-	error.code = 400
+	error.code = 400;
 	throw error;
     };
 
