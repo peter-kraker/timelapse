@@ -46,7 +46,6 @@ function checkImages (body) {
 	throw error;
   };
 	  
-  const storage = new Storage();
   const bucketName = 'timelapse-scratch/' + body.month + '/' + body.day;
 
 // Get all the files in the bucket	  
