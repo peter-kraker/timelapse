@@ -25,8 +25,7 @@ exports.makeVideo = function makeVideo(req, res) {
        throw error;
      }
     
-    checkImages(req.body);
-    
+    checkAndGetImages(req.body);
     return createVideo(req.body.month, req.body.day);
     
   }).then((response) => {
@@ -38,7 +37,7 @@ exports.makeVideo = function makeVideo(req, res) {
   });
 };
 
-function checkImages (body) {
+function checkAndGetImages (body) {
 // Make sure there are days defined in the request
   if(!body || body.day === undefined || body.month === undefined) {
     const error = new Error('Need to specify a date!');
@@ -49,6 +48,8 @@ function checkImages (body) {
   const bucketName = 'timelapse-scratch';
   const prefix = body.month + '/' + body.day + '/';
   const delimiter = '/';
+  const tempImageDir = '/tmp/images';
+  console.log('Created ' + tempImageDir);
   console.log("Bucket Name: " + bucketName);
   console.log("Folder name: " + prefix);
 
@@ -62,21 +63,7 @@ function checkImages (body) {
 
   const storage = new Storage();
 
-  console.debug(storage.bucket(bucketName));
-
-// check to make sure the bucket exists
-  storage.getBuckets()
-	.then(results => {
-		const buckets = results[0];
-		console.log("Buckets:");
-		buckets.forEach(bucket => {
-			console.log(bucket.name);
-		});
-	})
-	.catch(err => {
-		console.error('ERROR:', err);
-	});
-
+  console.log(storage.bucket(bucketName));
 
 // Get all the files in the bucket	  
   storage
@@ -84,12 +71,19 @@ function checkImages (body) {
 	.getFiles(options)
 	.then(results => {
 		const files = results[0];
-		console.log('Number of Files: ' + files.length);
+		const numberOfFiles = files.length;
+		console.log('Number of Files: ' + numberOfFiles);
 		if (files.length == 0) {
 			const error = new Error('No files found in bucket: ' + bucketName + '!');
 			error.code = 400;
 			throw error;
     		};
+		for ( var i = 0; i < numberOfFiles; i++ ){
+			destFilename = tempImageDir + '/' + i
+			files[i].download(destFilename).then(() => {
+				console.log(`gs://${bucketName}/files[${i}] downloaded to ${destFilename}.`);
+			});
+		}
   	}).catch(err => {
     		console.error('ERROR:', err);
   	});
@@ -116,7 +110,16 @@ function createVideo (month, day) {
       error.code = 501;
       throw error;
     });
-    stream.pipe(fs.createWriteStream('/tmp/' + day + '-animated.mkv'));
+    // Output filename should be something like '/tmp/15-animated.mkv'
+    const outputFile = '/tmp/' + day + '-animated.mkv';
+    console.log("Writing to " + outputFile); 
+    stream.on('message', function(data) {
+      console.log(data);
+    });  
+    stream.pipe(fs.createWriteStream(outputFile));
+    stream.on('progress', function(progress) {
+      console.log(progress);
+    });
     stream.once('exit', function(exitCode, signal) {
       console.log(exitCode, signal);
     });
