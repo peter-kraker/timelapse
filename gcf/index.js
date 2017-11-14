@@ -48,10 +48,24 @@ function checkImages (body) {
 	  
   const bucketName = 'timelapse-scratch/' + body.month + '/' + body.day;
 
+// check to make sure the bucket exists
+  storage.getBuckets()
+	.then(results => {
+		const buckets = results[0];
+		console.log("Buckets:");
+		buckets.forEach(bucket => {
+			console.log(bucket.name);
+		});
+	})
+	.catch(err => {
+		console.error('ERRORL', err);
+	});
+
+
 // Get all the files in the bucket	  
   storage
 	  .bucket(bucketName)
-	  .getfiles()
+	  .getFiles()
 	  .then(results => {
     const files = results[0];
     
