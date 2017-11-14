@@ -98,14 +98,19 @@ function createVideo (month, day) {
       '-i', tempImageDir,
       '-c:v', 'h264',
       '-crf', '1',
-      '/tmp/' + day + '-animated.mkv'
+      '-y', '/tmp/' + day + '-animated.mkv'
     ];
-    console.log(`AVconv parameters: $(params)`);
+    console.log('AVconv parameters: ' + params);
     var stream = avconv(params);
+    stream.on('error', function(data) {
+      const error = new Error('AVconv had an issue: ' + data);
+      error.code = 501;
+      throw error;
+    });
     stream.pipe(fs.createWriteStream('/tmp/' + day + '-animated.mkv'));
     stream.once('exit', function(exitCode, signal) {
-      callback(exitCode, signal, output, err);
+      console.log(exitCode, signal);
     });
   });
                           
-}
+};
