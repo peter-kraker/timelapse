@@ -47,6 +47,7 @@ function checkImages (body) {
   };
 	  
   const bucketName = 'timelapse-scratch/' + body.month + '/' + body.day;
+  console.log(bucketName);
 
 // check to make sure the bucket exists
   storage.getBuckets()
@@ -74,17 +75,17 @@ function checkImages (body) {
     files.forEach(file => {
       console.log(file.name);
     });
+    if (files.length == 0) {
+      const error = new Error('No files found in bucket: ' + bucketName + '!');
+	error.code = 400
+	throw error;
+    };
+
   }).catch(err => {
     console.error('ERROR:', err);
   });
 	  
 // If you couldn't find any files, throw an error. 
-  if (files.length == 0) {
-    const error = new Error('No files found in bucket: ' + bucketName + '!');
-	error.code = 400
-	throw error;
-  };
-
 };
              
 
