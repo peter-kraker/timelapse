@@ -2,7 +2,7 @@
 const exec = require('child_process').exec;
 const fs = require('fs');
 const path = require('path');
-const storage = require('@google-cloud/storage')();
+const Storage = require('@google-cloud/storage');
 const avconv = require('avconv');
 // [END functions_timelapse_setup]
 
@@ -48,6 +48,8 @@ function checkImages (body) {
 	  
   const bucketName = 'timelapse-scratch/' + body.month + '/' + body.day;
   console.log("Bucket Name: " + bucketName);
+
+const storage = new Storage();
 
 // check to make sure the bucket exists
   storage.getBuckets()
