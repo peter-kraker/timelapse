@@ -46,10 +46,21 @@ function checkImages (body) {
 	throw error;
   };
 	  
-  const bucketName = 'timelapse-scratch/' + body.month + '/' + body.day;
+  const bucketName = 'timelapse-scratch';
+  const prefix = body.month + '/' + body.day + '/';
+  const delimiter = '/';
   console.log("Bucket Name: " + bucketName);
+  console.log("Folder name: " + prefix);
 
-const storage = new Storage();
+  const options = {
+    prefix: prefix,
+  } 
+  
+  if (delimiter) {
+    options.delimiter = delimiter;
+  }
+
+  const storage = new Storage();
 
 // check to make sure the bucket exists
   storage.getBuckets()
@@ -67,24 +78,19 @@ const storage = new Storage();
 
 // Get all the files in the bucket	  
   storage
-	  .bucket(bucketName)
-	  .getFiles()
-	  .then(results => {
-    const files = results[0];
-    
-// Put the list of files in the logs.
-    console.log('Number of Files: ' + files.length);
-    if (files.length == 0) {
-      const error = new Error('No files found in bucket: ' + bucketName + '!');
-	error.code = 400;
-	throw error;
-    };
-
-  }).catch(err => {
-    console.error('ERROR:', err);
-  });
-	  
-// If you couldn't find any files, throw an error. 
+	.bucket(bucketName)
+	.getFiles(options)
+	.then(results => {
+		const files = results[0];
+		console.log('Number of Files: ' + files.length);
+		if (files.length == 0) {
+			const error = new Error('No files found in bucket: ' + bucketName + '!');
+			error.code = 400;
+			throw error;
+    		};
+  	}).catch(err => {
+    		console.error('ERROR:', err);
+  	});
 };
              
 
