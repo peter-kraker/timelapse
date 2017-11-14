@@ -20,9 +20,10 @@ fi
 
 
 # Set Focus to 0, farthest away. Disable the flourecent light compensation.
-#   fswebcam -s "Focus, Auto"="False"
-#   fswebcam -s "Focus (absolute)"=0 -s "Power Line Frequency"="Disabled" 2>&1
-v4l2-ctl --set-ctrl=exposure_auto_priority=0
+# fswebcam -s "Focus, Auto"="False"
+# fswebcam -s "Focus (absolute)"=0 -s "Power Line Frequency"="Disabled" 2>&1
+# fswebcam -s "Exposure, Auto Priority"="False"
+# v4l2-ctl --set-ctrl=exposure_auto_priority=0
 
 
 # Auto-exposure on webcams really sucks. Dump 15 frames of video to force the 
@@ -35,9 +36,10 @@ v4l2-ctl --set-ctrl=exposure_auto_priority=0
 #
 # The -S flag for fswebcam dumps N frames, maybe we don't need this step.
 
-fswebcam -q -r 1920x1080 -D 3 -S 10 --no-banner -d $CAMERA \
+fswebcam -q -r 1280x720 -D 5 -S 60 --no-banner -d $CAMERA \
   -s "Focus, Auto"="False" -s "Focus (absolute)"=0 \
   -s "Power Line Frequency"="Disabled" \
+  -s "Exposure, Auto Priority"="False" \
   $TL/pics/$MONTH/$DAY/$TIME.jpg >> $TL/tl_info.log 2>&1
 
 # In order to get a better framerate on the final video, take a photo every 30
@@ -53,7 +55,8 @@ TIME=`date +"%H%M%S"`
 
 
 # Now do it again
-fswebcam -q -r 1920x1080 -D 3 -S 10 --no-banner -d $CAMERA \
+fswebcam -q -r 1280x720 -D 5 -S 60 --no-banner -d $CAMERA \
   -s "Focus, Auto"="False" -s "Focus (absolute)"=0 \
   -s "Power Line Frequency"="Disabled" \
+  -s "Exposure, Auto Priority"="False" \
   $TL/pics/$MONTH/$DAY/$TIME.jpg >> $TL/tl_info.log 2>&1
