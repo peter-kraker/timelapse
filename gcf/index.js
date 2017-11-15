@@ -2,6 +2,7 @@
 const exec = require('child_process').exec;
 const fs = require('fs');
 const path = require('path');
+const util = require('util');
 const Storage = require('@google-cloud/storage');
 const avconv = require('avconv');
 // [END functions_timelapse_setup]
@@ -26,7 +27,7 @@ exports.makeVideo = function makeVideo(req, res) {
      }
     
     checkAndGetImages(req.body);
-    return createVideo(req.body.month, req.body.day);
+    //return createVideo(req.body.month, req.body.day);
 
   }).then((response) => {
     res.status(200).send('Success: ' + req.body.month + ' ' + req.body.day + ' - VideoID:' + res.json(response));
@@ -68,65 +69,61 @@ function checkAndGetImages (body) {
 }
 
   const storage = new Storage();
-
   console.log(storage.bucket(bucketName));
+  var numFiles = 0;
 
 // Get all the files in the bucket	  
   storage
 	.bucket(bucketName)
-	.getFiles(options)
-	.then(results => {
-		const files = results[0];
-		const numberOfFiles = files.length;
-		console.log('Number of Files: ' + numberOfFiles);
-		if (files.length == 0) {
-			const error = new Error('No files found in bucket: ' + bucketName + '!');
-			error.code = 400;
-			throw error;
-    		};
-		for ( var i = 0; i < numberOfFiles; i++ ){
-			destFilename = tempImageDir + '/' + i
-			files[i].download(destFilename).then(() => {
-				console.log(`gs://${bucketName}/files[${i}] downloaded to ${destFilename}.`);
-			});
-		}
-  	}).catch(err => {
-    		console.error('ERROR:', err);
-  	});
+	.getFilesStream()
+	.on('data', function(file) {
+		console.log("Downloading " + file.name + " to " + tempImageDir);
+		file.download({
+			// TODO: Fix this business
+			destination: '/tmp/images/'+util.format("%d.JPG",numFiles)
+			}, function(err) {});
+		numFiles++;
+	})
+	.on('error', console.error)
+	.on('end', function(){
+		for ( var i; i < numFiles; i++) {
+			
+		} 
+		//createVideo(body.month, body.day, tempImageDir + "/%04d.JPG");
+	});
+// createVideo(body.month, body.day, tempImageDir + "/%04d.JPG");
 };
-             
 
-function createVideo (month, day) {
-  const tempImageDir = '/tmp/images';
+function createVideo (month, day, ImageDir) {
   return new Promise((resolve, reject) => {
     var params = [
       '-f', 'image2',
       '-framerate', '25',
-      '-i', tempImageDir,
+      '-i', ImageDir,
       '-c:v', 'h264',
       '-crf', '1',
       '-y', '/tmp/' + day + '-animated.mkv'
     ];
-    console.log('AVconv parameters: ' + params);
     var stream = avconv(params);
-    stream.on('error', function(data) {
+    console.log('AVconv parameters: ' + params);
+    // Output filename should be something like '/tmp/15-animated.mkv'
+    const outputFile = '/tmp/' + day + '-animated.mkv';
+    console.log("Writing to " + outputFile); 
+    stream.pipe(fs.createWriteStream(outputFile))
+    .on('error', function(data) {
       console.error(data);
       console.error(params);
       const error = new Error('AVconv had an issue: ' + data);
       error.code = 501;
       throw error;
-    });
-    // Output filename should be something like '/tmp/15-animated.mkv'
-    const outputFile = '/tmp/' + day + '-animated.mkv';
-    console.log("Writing to " + outputFile); 
-    stream.on('message', function(data) {
+    })
+    .on('message', function(data) {
       console.log(data);
-    });  
-    stream.pipe(fs.createWriteStream(outputFile));
-    stream.on('progress', function(progress) {
+    })  
+    .on('progress', function(progress) {
       console.log(progress);
-    });
-    stream.once('exit', function(exitCode, signal) {
+    })
+    .once('exit', function(exitCode, signal) {
       console.log(exitCode, signal);
     });
   });
