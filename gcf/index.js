@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const util = require('util');
 const Storage = require('@google-cloud/storage');
+const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 const ffmpeg = require('fluent-ffmpeg');
 // [END functions_timelapse_setup]
 
