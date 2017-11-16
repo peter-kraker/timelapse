@@ -49,24 +49,14 @@ function checkAndGetImages (body) {
   };
 	  
   const bucketName = 'timelapse-scratch';
-  const prefix = body.month + '/' + body.day + '/';
-  const delimiter = '/';
   const tempImageDir = '/tmp/images';
   console.log("Bucket Name: " + bucketName);
-  console.log("Folder name: " + prefix);
-
-  const options = {
-    prefix: prefix,
-  } 
-  
-  if (delimiter) {
-    options.delimiter = delimiter;
-  }
 
   // Make the tempDirectory
   try {
   fs.mkdirSync(tempImageDir);
 } catch(err) {
+  console.log("Couldn't create temp image directory "+tempImageDir+"!");
   if (err.code !== 'EEXIST') throw err
 }
 
