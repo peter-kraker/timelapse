@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const util = require('util');
 const Storage = require('@google-cloud/storage');
-const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
+//const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 const ffmpeg = require('fluent-ffmpeg');
 // [END functions_timelapse_setup]
 
@@ -54,7 +54,7 @@ function checkAndGetImages (body) {
 
   // Make the tempDirectory
   try {
-  fs.mkdirSync(tempImageDir);
+//  fs.mkdirSync(tempImageDir);
 } catch(err) {
   console.log("Couldn't create temp image directory "+tempImageDir+"!");
   if (err.code !== 'EEXIST') throw err
@@ -69,13 +69,16 @@ function checkAndGetImages (body) {
 	.getFilesStream()
 	.on('data', function(file) {
 		console.log("Downloading " + file.name + " to " + tempImageDir);
+		/*
 		file.download({
 			destination: '/tmp/images/'+file.name
-			}, function(err) {});
+			}, function(err) {}
+		);
+		*/
 	})
 	.on('error', console.error)
 	.on('end', function(){
-		createVideo(body.month, body.day, tempImageDir);
+//		createVideo(body.month, body.day, tempImageDir);
 	});
 };
 
