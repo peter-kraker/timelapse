@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const util = require('util');
 const Storage = require('@google-cloud/storage');
-const avconv = require('avconv');
+const ffmpeg = require('fluent-ffmpeg');
 // [END functions_timelapse_setup]
 
 /**
@@ -27,10 +27,11 @@ exports.makeVideo = function makeVideo(req, res) {
      }
     
     checkAndGetImages(req.body);
-    //return createVideo(req.body.month, req.body.day);
+    //createVideo(req.body.month, req.body.day, "/tmp/images");
 
   }).then((response) => {
-    res.status(200).send('Success: ' + req.body.month + ' ' + req.body.day + ' - VideoID:' + res.json(response));
+    res.status(200);
+    res.send('Success: ' + req.body.month + ' ' + req.body.day + ' - VideoID:' + res.json(response));
   }).catch((err) => {
     console.error(err);
     res.status(err.code || 500).send(err);
@@ -70,7 +71,6 @@ function checkAndGetImages (body) {
 
   const storage = new Storage();
   console.log(storage.bucket(bucketName));
-  var numFiles = 0;
 
 // Get all the files in the bucket	  
   storage
@@ -79,53 +79,39 @@ function checkAndGetImages (body) {
 	.on('data', function(file) {
 		console.log("Downloading " + file.name + " to " + tempImageDir);
 		file.download({
-			// TODO: Fix this business
-			destination: '/tmp/images/'+util.format("%d.JPG",numFiles)
+			destination: '/tmp/images/'+file.name
 			}, function(err) {});
-		numFiles++;
 	})
 	.on('error', console.error)
 	.on('end', function(){
-		for ( var i; i < numFiles; i++) {
-			
-		} 
-		//createVideo(body.month, body.day, tempImageDir + "/%04d.JPG");
+		createVideo(body.month, body.day, tempImageDir);
 	});
-// createVideo(body.month, body.day, tempImageDir + "/%04d.JPG");
 };
 
-function createVideo (month, day, ImageDir) {
-  return new Promise((resolve, reject) => {
-    var params = [
-      '-f', 'image2',
+function createVideo (month, day, imageDir) {
+   const inputImages = imageDir + "/*.jpg";
+   console.log('Input images are here: '+inputImages);
+   ffmpeg()
+	  .addInput(inputImages)
+	  .inputOption([
+      //'-f', 'image2',
+      '-pattern_type', 'glob',
       '-framerate', '25',
-      '-i', ImageDir,
-      '-c:v', 'h264',
-      '-crf', '1',
-      '-y', '/tmp/' + day + '-animated.mkv'
-    ];
-    var stream = avconv(params);
-    console.log('AVconv parameters: ' + params);
-    // Output filename should be something like '/tmp/15-animated.mkv'
-    const outputFile = '/tmp/' + day + '-animated.mkv';
-    console.log("Writing to " + outputFile); 
-    stream.pipe(fs.createWriteStream(outputFile))
-    .on('error', function(data) {
-      console.error(data);
-      console.error(params);
-      const error = new Error('AVconv had an issue: ' + data);
-      error.code = 501;
-      throw error;
-    })
-    .on('message', function(data) {
-      console.log(data);
-    })  
-    .on('progress', function(progress) {
-      console.log(progress);
-    })
-    .once('exit', function(exitCode, signal) {
-      console.log(exitCode, signal);
-    });
-  });
-                          
+      //'-s', '1280x720',
+      //'-pix_fmt', 'yuv420p',
+      //'-c:v', 'h264'
+  	])
+	  .on('start', function(commandLine) {
+		  console.log('Ffmpeg started with command: ' + commandLine);
+	  })
+	  .on('progress', function(progress) {
+		  console.log('Processing: ' + progress.percent + '% done');
+	  })
+	  .on('error', function(err, stdout, stderr) {
+		  console.log('Cannot process video: ' + err.message);
+	  })
+	  .on('end', function(stdout, stderr) {
+		  console.log('Render Succeded!');
+	  })
+	  .save('/tmp/'+day+'-animated.mkv');
 };
