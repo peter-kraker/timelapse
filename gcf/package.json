@@ -18,16 +18,19 @@
   },
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.13",
-    "@google-cloud/storage": "^1.2.1",
+    "@google-cloud/storage": "^1.4.0",
     "avconv": "^3.1.0",
+    "eslint": "^4.11.0",
     "express": "^4.16.2",
     "fluent-ffmpeg": "^2.1.2",
     "google-auth-library": "^0.11.0",
-    "googleapis": "^20.1.0"
+    "googleapis": "^20.2.0",
+    "lint": "^1.1.2"
   },
   "devDependencies": {
     "@google-cloud/nodejs-repo-tools": "1.4.17",
     "ava": "0.21.0",
+    "eslint-config-google": "^0.9.1",
     "proxyquire": "1.8.0",
     "sinon": "3.2.0"
   },

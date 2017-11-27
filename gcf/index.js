@@ -27,13 +27,13 @@ exports.makeVideo = function makeVideo(req, res) {
        throw error;
      }
     
-    checkAndGetImages(req.body);
+    return checkAndGetImages(req.body);
     //createVideo(req.body.month, req.body.day, "/tmp/images");
 
-  }).then((response) => {
+  }).then(function (response) {
     res.status(200);
-    res.send('Success: ' + req.body.month + ' ' + req.body.day + ' - VideoID:' + res.json(response));
-  }).catch((err) => {
+    res.send('Success: ' + req.body.month + ' ' + req.body.day + ' - VideoID:' + response);
+  }).catch(function (err) {
     console.error(err);
     res.status(err.code || 500).send(err);
     return Promise.reject(err);
@@ -41,6 +41,7 @@ exports.makeVideo = function makeVideo(req, res) {
 };
 
 function checkAndGetImages (body) {
+	return new Promise((resolve, reject) => {
 // Make sure there are days defined in the request
   if(!body || body.day === undefined || body.month === undefined) {
     const error = new Error('Need to specify a date!');
@@ -62,13 +63,15 @@ function checkAndGetImages (body) {
 
   const storage = new Storage();
   console.log(storage.bucket(bucketName));
+  var numFiles = 0;
 
 // Get all the files in the bucket	  
   storage
 	.bucket(bucketName)
 	.getFilesStream()
 	.on('data', function(file) {
-		console.log("Downloading " + file.name + " to " + tempImageDir);
+		//console.log("Downloading " + file.name + " to " + tempImageDir);
+		numFiles++;
 		/*
 		file.download({
 			destination: '/tmp/images/'+file.name
@@ -78,8 +81,10 @@ function checkAndGetImages (body) {
 	})
 	.on('error', console.error)
 	.on('end', function(){
+		resolve(numFiles);
 //		createVideo(body.month, body.day, tempImageDir);
 	});
+});
 };
 
 function createVideo (month, day, imageDir) {

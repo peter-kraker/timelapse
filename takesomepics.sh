@@ -39,7 +39,7 @@ fi
 fswebcam -q -r 1280x720 -D 5 -S 60 --no-banner -d $CAMERA \
   -s "Focus, Auto"="False" -s "Focus (absolute)"=0 \
   -s "Power Line Frequency"="Disabled" \
-  -s "Exposure, Auto Priority"="False" \
+  -s "Exposure, Auto Priority"="True" \
   $TL/pics/$MONTH/$DAY/$TIME.jpg >> $TL/tl_info.log 2>&1
 
 # In order to get a better framerate on the final video, take a photo every 30
@@ -58,5 +58,5 @@ TIME=`date +"%H%M%S"`
 fswebcam -q -r 1280x720 -D 5 -S 60 --no-banner -d $CAMERA \
   -s "Focus, Auto"="False" -s "Focus (absolute)"=0 \
   -s "Power Line Frequency"="Disabled" \
-  -s "Exposure, Auto Priority"="False" \
+  -s "Exposure, Auto Priority"="True" \
   $TL/pics/$MONTH/$DAY/$TIME.jpg >> $TL/tl_info.log 2>&1
